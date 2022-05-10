@@ -13,8 +13,8 @@ let currentGen = ref(0);
 let pokedex: any;
 
 const nameReplacements = {
-  "nidoran-f": "nidoran♀",
-  "nidoran-m": "nidoran♂",
+  "nidoran-f": "nidoran",
+  "nidoran-m": "nidoran",
   farfetchd: "farfetch'd",
   "mime-jr": "mime jr",
   "mr-mime": "mr mime",
