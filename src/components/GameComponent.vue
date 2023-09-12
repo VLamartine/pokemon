@@ -1,31 +1,31 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
-  const props = defineProps({
-      pokemons: null
+const props = defineProps({
+  pokemons: null,
+});
+
+const emit = defineEmits(['startGame']);
+const guess = ref('');
+const gameStarted = ref(false);
+
+const startGame = () => {
+  gameStarted.value = true;
+  emit('startGame');
+};
+
+const onInputChange = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props.pokemons.forEach((pokemon: any) => {
+    if (pokemon.found) {
+      return;
+    }
+
+    if (pokemon.name.toLowerCase() === guess.value.toLowerCase()) {
+      pokemon.found = true;
+      guess.value = '';
+    }
   });
-
-  const emit = defineEmits(['startGame']);
-  const guess = ref('');
-  const gameStarted = ref(false);
-
-  const startGame = () => {
-    gameStarted.value = true;
-    emit('startGame');
-  }
-
-  const onInputChange = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    props.pokemons.forEach((pokemon: any) => {
-      if (pokemon.found) {
-        return;
-      }
-
-      if (pokemon.name.toLowerCase() === guess.value.toLowerCase()) {
-        pokemon.found = true;
-        guess.value = "";
-      }
-    })
-  }
+};
 </script>
 
 <template>
@@ -34,9 +34,8 @@ import { defineProps, defineEmits, ref } from 'vue';
       :disabled="!gameStarted"
       class="name-input"
       v-model="guess"
-      placeholder="Insert the name"
-      @input="onInputChange"
-    />
+      placeholder="Type the name"
+      @input="onInputChange" />
     <button class="start-game" v-if="!gameStarted" @click="startGame">
       Start game
     </button>
@@ -46,7 +45,7 @@ import { defineProps, defineEmits, ref } from 'vue';
       <div class="pokemon">
         <span class="pokemon-number">{{ pokemon.number }}</span>
         <span class="pokemon-name">{{
-          pokemon.found ? pokemon.name : ""
+          pokemon.found ? pokemon.name : ''
         }}</span>
       </div>
     </div>
@@ -61,12 +60,40 @@ import { defineProps, defineEmits, ref } from 'vue';
   width: 80%;
   margin: 1rem auto;
 }
+
 .list {
-  column-count: 4;
+  column-count: 1;
   column-fill: balance;
   column-gap: 0;
   width: 80%;
   margin: 0 auto;
+}
+
+.name-input {
+  height: 50px;
+  border-radius: 20px;
+  padding: 1rem;
+  width: 40%;
+  flex-grow: 1;
+  margin-right: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .list {
+    column-count: 4;
+    column-fill: balance;
+    column-gap: 0;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .name-input {
+    height: 50px;
+    border-radius: 20px;
+    padding: 1rem;
+    width: 40%;
+    flex-grow: 0;
+    margin-right: 0;
+  }
 }
 
 .pokemon {
@@ -91,13 +118,6 @@ import { defineProps, defineEmits, ref } from 'vue';
 
 .break {
   flex-basis: 100%;
-}
-
-.name-input {
-  height: 50px;
-  border-radius: 20px;
-  padding: 1rem;
-  width: 40%;
 }
 
 .start-game {
